@@ -1,0 +1,18 @@
+# Versions of the environment the reference runs used (Python 3.11.15, CUDA 13.0 wheel of torch).
+torch==2.13.0
+transformers==5.15.0
+accelerate==1.14.0
+datasets==5.0.1
+huggingface_hub==1.27.0
+tokenizers==0.22.2
+safetensors==0.8.0
+triton==3.7.1
+numpy==2.4.6
+pandas==3.0.5
+scipy==1.17.1
+sentencepiece==0.2.2
+nltk==3.10.3
+rouge==1.0.1
+jieba==0.42.1
+fuzzywuzzy==0.18.0
+tqdm

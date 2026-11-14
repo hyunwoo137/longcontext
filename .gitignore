@@ -1,0 +1,7 @@
+__pycache__/
+assets/*.pkl
+results/
+check/
+STOP
+slurm/*.out
+results_rest3pct.tgz
