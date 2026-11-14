@@ -25,7 +25,12 @@ cd longcontext
 conda create -n lc python=3.11 -y && conda activate lc
 pip install -r requirements_pinned.txt
 bash get_assets.sh                  # HashAttention 가중치 조립 + md5 확인 (OK 2줄)
-export HF_TOKEN=...                 # Llama-3.1-8B-Instruct 접근 승인된 토큰 (모델·16K 데이터셋 첫 다운로드)
+bash prefetch_data.sh               # 16K RULER 데이터셋(공개)을 HF 캐시에 받아 둠
+
+# 모델: 이미 받아 둔 Llama-3.1-8B-Instruct를 씀 (둘 중 하나)
+#  (a) HF 캐시에 있으면:  export HF_HOME=<그 캐시의 HF_HOME>   (hub/models--meta-llama--Llama-3.1-8B-Instruct 가 있는 곳)
+#  (b) 일반 폴더면:       export MODEL_PATH=<config.json·safetensors가 있는 폴더>
+export HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1   # 다운로드 없이 캐시만 사용 (prefetch 후)
 
 # (선택) 재현 확인: 16K dense qa_1 rows 100-102를 기준 예측과 비교 (~3-5분)
 GPU=0 bash check_repro.sh
@@ -39,6 +44,8 @@ Slurm 없이: `nohup bash run_queue.sh queue.txt "0 1 2 3 4 5 6 7" > /dev/null 2
 - 진행: `results/logs/queue.log` (gpuN start/done), 잡 로그 `results/logs/<길이>_<방법>_<과제>.txt`
 - 정지: `touch STOP` → 지금 잡까지 마치고 종료. 다시 실행하면 끝난 잡(metrics.json 있음)은 건너뜀.
 - 잡 하나만: `GPU=0 bash run_job.sh 98304 HAT qa_1`
+- `MODEL_PATH`를 쓰면 `--model <폴더>`로 실행하고 HashAttention 가중치는 Llama-3.1-8B-Instruct 것으로 매핑됩니다 (`HUB_MODEL_KEY`).
+- sbatch는 제출 시점의 환경변수(HF_HOME / MODEL_PATH / HF_HUB_OFFLINE)를 그대로 넘깁니다.
 
 ## 결과 회수
 

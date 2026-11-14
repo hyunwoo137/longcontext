@@ -1062,8 +1062,9 @@ def main() -> None:
                    kappa=str(args.fair_kappa), rep_pick=str(args.rep_pick),
                    kappa_samples=int(args.kappa_samples),
                    kappa_scale=float(args.kappa_scale))
-    if args.model in MODEL_HAT:
-        wf, bits, layers = MODEL_HAT[args.model]
+    _hat_key = args.model if args.model in MODEL_HAT else os.environ.get("HUB_MODEL_KEY", args.model)  # local model dir
+    if _hat_key in MODEL_HAT:
+        wf, bits, layers = MODEL_HAT[_hat_key]
         HAT_KW.update(hat_weight_file=wf, hat_bits=bits, hat_mlp_layers=layers)
     elif args.selector == "hat":
         raise ValueError(f"no HashAttention weights registered for {args.model} (MODEL_HAT)")
